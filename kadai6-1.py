@@ -1,18 +1,40 @@
 import requests
+import pandas as pd
 
 APP_ID = "77435cb40c39a246815b03bffba944bfea4f9ea3"
-API_URL  = "http://api.e-stat.go.jp/rest/3.0/app/json/getStatsData?appId=&lang=J&statsDataId=0002119864&metaGetFlg=Y&cntGetFlg=N&explanationGetFlg=Y&annotationGetFlg=Y&sectionHeaderFlg=1&replaceSpChars=0"
+API_URL  = "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData"
 
 params = {
     "appId": APP_ID,
-    "statsDataId":"00500509",
-    "lang": "J"  # 日本語を指定
+    "statsDataId":"0003412314",  # 食料需給表
+    "cdCat01": "0112",           # チーズ
+    "metaGetFlg":"Y",
+    "cntGetFlg":"N",
+    "explanationGetFlg":"Y",
+    "annotationGetFlg":"Y",
+    "sectionHeaderFlg":"1",
+    "replaceSpChars":"0",
+    "lang": "J"
 }
 
-
-
-#response = requests.get(API_URL, params=params)
 response = requests.get(API_URL, params=params)
-# Process the response
+
 data = response.json()
-print(data)
+
+print(data)  # ← 追加してレスポンス内容を確認
+
+# 統計データからデータ部取得
+values = data['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']
+
+df = pd.DataFrame(values)
+
+# メタ情報取得
+meta_info = data['GET_STATS_DATA']['STATISTICAL_DATA']['CLASS_INF']['CLASS_OBJ']
+
+new_columns = []
+for col in df.columns:
+    if col in col_replace_dict:
+        new_columns.append(col_replace_dict[col])
+    else:
+        new_columns.append(col)
+df.columns = new_columns
