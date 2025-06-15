@@ -1,3 +1,7 @@
+# e-statからチーズの需給表
+# エンドポイント：https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData
+
+
 import requests
 import pandas as pd
 
