@@ -21,8 +21,6 @@ response = requests.get(API_URL, params=params)
 
 data = response.json()
 
-print(data)  # ← 追加してレスポンス内容を確認
-
 # 統計データからデータ部取得
 values = data['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']
 
@@ -31,10 +29,4 @@ df = pd.DataFrame(values)
 # メタ情報取得
 meta_info = data['GET_STATS_DATA']['STATISTICAL_DATA']['CLASS_INF']['CLASS_OBJ']
 
-new_columns = []
-for col in df.columns:
-    if col in col_replace_dict:
-        new_columns.append(col_replace_dict[col])
-    else:
-        new_columns.append(col)
-df.columns = new_columns
+print(df)
